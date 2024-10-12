@@ -22,7 +22,29 @@
     <div class="decorative-element"></div>
     <div class="decorative-element"></div>
 
-    <button id="enterar" class="mt-4" value="Enter AR" disabled>View Card</button>
+    <button id="viewCardButton" class="mt-4">View Card</button>
+
+    <div class="modal fade" id="instructionsModal" tabindex="-1" aria-labelledby="instructionsModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="instructionsModalLabel">How to Use the AR Card</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <ol>
+              <li>Ensure that you're using an Adroid or Quest device</li>
+              <li>Stand up</li>
+              <li>Move your phone around to scan the floor</li>
+              <li>Tap to place the card</li>
+            </ol>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="gotItButton">Got it!</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div id="unity-container" class="d-none">
       <div id="unity-canvas-container">
@@ -96,13 +118,20 @@
     };
     document.body.appendChild(script);
 
-    let enterARButton = document.getElementById('enterar');
+    let viewCardButton = document.getElementById('viewCardButton');
+    let gotItButton = document.getElementById('gotItButton');
+    let instructionsModal = new bootstrap.Modal(document.getElementById('instructionsModal'));
 
     document.addEventListener('onARSupportedCheck', function (event) {
-      enterARButton.disabled = !event.detail.supported;
+      viewCardButton.disabled = !event.detail.supported;
     }, false);
 
-    enterARButton.addEventListener('click', function (event) {
+    viewCardButton.addEventListener('click', function (event) {
+      instructionsModal.show();
+    }, false);
+
+    gotItButton.addEventListener('click', function (event) {
+      instructionsModal.hide();
       unityInstance.Module.WebXR.toggleAR();
     }, false);
   </script>
