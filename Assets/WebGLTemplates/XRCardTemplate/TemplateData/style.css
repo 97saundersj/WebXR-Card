@@ -1,0 +1,103 @@
+body { padding: 0; margin: 0 }
+#unity-container { position: absolute }
+#unity-container { left: 50%; top: 50%; transform: translate(-50%, -50%) }
+#unity-canvas { background: {{{ BACKGROUND_COLOR }}} }
+#unity-loading-bar { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: none }
+#unity-logo { width: 154px; height: 130px; background: url('unity-logo-{{{ SPLASH_SCREEN_STYLE.toLowerCase() }}}.png') no-repeat center }
+#unity-progress-bar-empty { width: 141px; height: 18px; margin-top: 10px; margin-left: 6.5px; background: url('progress-bar-empty-{{{ SPLASH_SCREEN_STYLE.toLowerCase() }}}.png') no-repeat center }
+#unity-progress-bar-full { width: 0%; height: 18px; margin-top: 10px; background: url('progress-bar-full-{{{ SPLASH_SCREEN_STYLE.toLowerCase() }}}.png') no-repeat center }
+#unity-footer { position: relative }
+#unity-webgl-logo { float:left; width: 204px; height: 38px; background: url('webgl-logo.png') no-repeat center }
+#unity-build-title { float: right; margin-right: 10px; line-height: 38px; font-family: arial; font-size: 18px }
+#unity-fullscreen-button { cursor:pointer; float: right; width: 38px; height: 38px; background: url('fullscreen-button.png') no-repeat center }
+#unity-webxr-link { float: left; margin-right: 10px; line-height: 38px; font-family: arial; font-size: 18px }
+
+body {
+    background-color: #f4f4f4;
+    color: #333;
+    min-height: 100vh;
+  }
+
+  #message h1 {
+    font-size: 2rem;
+    color: #ff7f50;
+  }
+
+  #message p {
+    font-size: 1rem;
+    color: #666;
+  }
+
+  .decorative-element {
+    background-color: #ff7f50;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin: 10px;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-30px); }
+    60% { transform: translateY(-15px); }
+  }
+
+  #viewCardButton {
+    background-color: #ff7f50;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 25px;
+    cursor: not-allowed;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+  }
+
+  #viewCardButton:enabled {
+    cursor: pointer;
+    background-color: #ff4500;
+  }
+
+  #footer {
+    font-size: 0.9rem;
+    color: #aaa;
+    background-color: #f8f8f8;
+    border-top: 1px solid #e7e7e7;
+  }
+
+  #footer a {
+    color: #ff7f50;
+    text-decoration: none;
+    margin: 0 5px;
+  }
+
+  #footer a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 600px) {
+    #message h1 { font-size: 1.8rem; }
+    #message p { font-size: 0.9rem; }
+    .decorative-element {
+      width: 20px;
+      height: 20px;
+    }
+    #enterar {
+      font-size: 14px;
+      padding: 10px 20px;
+    }
+    #footer { font-size: 0.8rem; }
+
+    .modal-dialog-centered {
+        display: flex;
+        align-items: center;
+        min-height: calc(100% - 1rem);
+      }
+      @media (min-width: 576px) {
+        .modal-dialog-centered {
+          min-height: calc(100% - 3.5rem);
+        }
+      }
+  }
