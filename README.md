@@ -9,7 +9,7 @@ The AR Birthday Card allows users to view and interact with a 3D birthday card i
 
 ## Demo
 
-You can try out the AR Birthday Card here: https://97saundersj.github.io/WebXR-gh-pages/.
+You can try out the AR Birthday Card here: https://97saundersj.github.io/WebXR-Card-Website/.
 The demo contains a birthday card for a sisters birthday.
 
 ## Technical Stack
