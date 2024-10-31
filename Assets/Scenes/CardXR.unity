@@ -6564,6 +6564,26 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: f16c23ef6e7c3fd4397604e7d94136ab, type: 3}
+    - target: {fileID: 5709664783564102548, guid: 5ccccbec84036954abf65f0fcd103f54, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5709664783669081064, guid: 5ccccbec84036954abf65f0fcd103f54, type: 3}
+      propertyPath: m_Size.x
+      value: 0.31052253
+      objectReference: {fileID: 0}
+    - target: {fileID: 5709664783669081064, guid: 5ccccbec84036954abf65f0fcd103f54, type: 3}
+      propertyPath: m_Center.x
+      value: -0.00268392
+      objectReference: {fileID: 0}
+    - target: {fileID: 5709664783669081064, guid: 5ccccbec84036954abf65f0fcd103f54, type: 3}
+      propertyPath: m_Center.z
+      value: 0.002144909
+      objectReference: {fileID: 0}
+    - target: {fileID: 5709664783669081064, guid: 5ccccbec84036954abf65f0fcd103f54, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5709664783669081065, guid: 5ccccbec84036954abf65f0fcd103f54, type: 3}
       propertyPath: m_Name
       value: Card
@@ -6571,6 +6591,10 @@ PrefabInstance:
     - target: {fileID: 5709664783669081065, guid: 5ccccbec84036954abf65f0fcd103f54, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5709664783669081065, guid: 5ccccbec84036954abf65f0fcd103f54, type: 3}
+      propertyPath: m_TagString
+      value: Interactable
       objectReference: {fileID: 0}
     - target: {fileID: 5709664783669081066, guid: 5ccccbec84036954abf65f0fcd103f54, type: 3}
       propertyPath: m_RootOrder
@@ -6615,6 +6639,18 @@ PrefabInstance:
     - target: {fileID: 5709664783669081066, guid: 5ccccbec84036954abf65f0fcd103f54, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5709664783669081067, guid: 5ccccbec84036954abf65f0fcd103f54, type: 3}
+      propertyPath: m_Drag
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5709664783669081067, guid: 5ccccbec84036954abf65f0fcd103f54, type: 3}
+      propertyPath: m_AngularDrag
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5709664783669081067, guid: 5ccccbec84036954abf65f0fcd103f54, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5709664784391056313, guid: 5ccccbec84036954abf65f0fcd103f54, type: 3}
       propertyPath: m_Sprite
