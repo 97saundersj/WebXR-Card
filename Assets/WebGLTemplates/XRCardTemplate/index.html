@@ -13,10 +13,12 @@
 </head>
 
 <body class="d-flex flex-column">
+  <button class="btn btn-primary position-fixed" style="top: 20px; right: 20px;" onclick="openEditForm()">Customise</button>
+  
   <div class="container-fluid flex-grow-1 d-flex flex-column justify-content-center align-items-center py-4">
     <div id="message" class="text-center mb-4">
-      <h1>Happy Birthday!</h1>
-      <p class="mb-4">Experience your AR card below.</p>
+      <h1 id="landingPageHeader">Happy Birthday!</h1>
+      <p id="landingPageMessage" class="mb-4">Experience your AR card below.</p>
     </div>
 
     <div class="decorative-element"></div>
@@ -67,6 +69,63 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 
+  <div id="editForm" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Customise Your Card</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-4">
+            <h6 class="fw-bold">Landing Page</h6>
+            <div class="border p-3 rounded bg-light">
+              <div class="mb-3">
+                <label for="landingPageHeaderInput" class="form-label">Header</label>
+                <input type="text" class="form-control" id="landingPageHeaderInput" placeholder="Enter header text">
+              </div>
+              <div class="mb-3">
+                <label for="landingPageMessageInput" class="form-label">Message</label>
+                <textarea class="form-control" id="landingPageMessageInput" rows="3" placeholder="Enter message text"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <h6 class="fw-bold">XR Card</h6>
+            <div class="border p-3 rounded bg-light">
+              <div class="mb-3">
+                <label for="cardImageInput" class="form-label">Card Image</label>
+                <select class="form-select" id="cardImageInput">
+                  <option value="birthday">Birthday</option>
+                  <option value="halloween">Halloween</option>
+                  <option value="christmas">Christmas</option>
+                  <!--<option value="custom">Custom (excample)</option>-->
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="cardTopInput" class="form-label">Top Text</label>
+                <input type="text" class="form-control" id="cardTopInput" placeholder="Enter top text">
+              </div>
+              <div class="mb-3">
+                <label for="cardMiddleInput" class="form-label">Middle Text</label>
+                <textarea class="form-control" id="cardMiddleInput" placeholder="Enter middle text"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="cardBottomInput" class="form-label">Bottom Text</label>
+                <textarea class="form-control" id="cardBottomInput" placeholder="Enter bottom text"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="saveCardText()">Save & Generate Link</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     var buildUrl = "Build";
     var loaderUrl = buildUrl + "/{{{ LOADER_FILENAME }}}";
@@ -107,6 +166,7 @@
       }).then((instance) => {
         unityInstance = instance;
         loadingBar.style.display = "none";
+        sendCardTextToUnity();
         if (fullscreenButton) {
           fullscreenButton.onclick = () => {
             unityInstance.SetFullscreen(1);
@@ -134,6 +194,90 @@
       instructionsModal.hide();
       unityInstance.Module.WebXR.toggleAR();
     }, false);
+
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+
+    function openEditForm() {
+        const header = getUrlParameter('header') || 'Happy Birthday!';
+        const message = getUrlParameter('message') || 'Experience your AR card below.';
+
+        const cardImage = getUrlParameter('cardImage') || 'birthday';
+        const cardTop = getUrlParameter('cardTop') || 'Dear John,';
+        const cardMiddle = getUrlParameter('cardMiddle') || 'Have a great birthday!';
+        const cardBottom = getUrlParameter('cardBottom') || 'Love Jane';
+        
+        document.getElementById('landingPageHeaderInput').value = header;
+        document.getElementById('landingPageMessageInput').value = message;
+
+        document.getElementById('cardImageInput').value = cardImage;
+        document.getElementById('cardTopInput').value = cardTop;
+        document.getElementById('cardMiddleInput').value = cardMiddle;
+        document.getElementById('cardBottomInput').value = cardBottom;
+        
+        const modal = new bootstrap.Modal(document.getElementById('editForm'));
+        modal.show();
+    }
+
+    function saveCardText() {
+        const header = document.getElementById('landingPageHeaderInput').value;
+        const message = document.getElementById('landingPageMessageInput').value;
+
+        const cardTop = document.getElementById('cardTopInput').value;
+        const cardMiddle = document.getElementById('cardMiddleInput').value;
+        const cardBottom = document.getElementById('cardBottomInput').value;
+        const cardImage = document.getElementById('cardImageInput').value;
+        
+        // Update page content
+        document.getElementById('landingPageHeader').textContent = header;
+        document.getElementById('landingPageMessage').textContent = message;
+        
+        // Update URL with new parameters
+        const baseUrl = window.location.origin + window.location.pathname;
+        const newUrl = `${baseUrl}?header=${encodeURIComponent(header)}&message=${encodeURIComponent(message)}&cardTop=${encodeURIComponent(cardTop)}&cardMiddle=${encodeURIComponent(cardMiddle)}&cardBottom=${encodeURIComponent(cardBottom)}&cardImage=${encodeURIComponent(cardImage)}`;
+        
+        // Copy link to clipboard
+        navigator.clipboard.writeText(newUrl).then(() => {
+            alert('Shareable link copied to clipboard!');
+            bootstrap.Modal.getInstance(document.getElementById('editForm')).hide();
+        }).catch(err => {
+            console.error('Failed to copy link: ', err);
+            alert('Failed to copy link to clipboard');
+        });
+
+        // Navigate to the new URL
+        window.location.href = newUrl; // Updated to navigate to the new URL
+    }
+
+    // Send card text to Unity once it's loaded
+    function sendCardTextToUnity() {
+        const cardImage = getUrlParameter('cardImage') || 'birthday';
+        const cardTop = getUrlParameter('cardTop') || '';
+        const cardMiddle = getUrlParameter('cardMiddle') || '';
+        const cardBottom = getUrlParameter('cardBottom') || '';
+
+        if (unityInstance && (cardTop || cardMiddle || cardBottom)) {
+            unityInstance.SendMessage('Card', 'UpdateCardText', 
+              JSON.stringify({ cardImage, cardTop, cardMiddle, cardBottom })
+            );
+        }
+    }
+    // Update page content on load if URL parameters exist
+    document.addEventListener('DOMContentLoaded', function() {
+        const header = getUrlParameter('header');
+        const message = getUrlParameter('message');
+        
+        if (header) {
+            document.getElementById('landingPageHeader').textContent = header;
+        }
+        if (message) {
+            document.getElementById('landingPageMessage').textContent = message;
+        }
+    });
   </script>
 </body>
 

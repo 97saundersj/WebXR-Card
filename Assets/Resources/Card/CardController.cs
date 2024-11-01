@@ -1,5 +1,6 @@
 using UnityEngine;
 using WebXR;
+using System.Collections;
 
 public class CardController : MonoBehaviour
 {
@@ -20,10 +21,21 @@ public class CardController : MonoBehaviour
     private WebXRController leftController;
     private WebXRController rightController;
 
+    [SerializeField] private AudioClip toggleSound;
+    [SerializeField] private AudioSource audioSource;
+
+    [SerializeField] private float audioDelay = 0.2f;
+    [SerializeField] private float audioPitch = 1.5f;
+
     void Start()
     {
+        #if !UNITY_EDITOR && UNITY_WEBGL
+            // disable WebGLInput.captureAllKeyboardInput so elements in web page can handle keyboard inputs
+            WebGLInput.captureAllKeyboardInput = false;
+        #endif
+
         animator = GetComponent<Animator>();
-        UpdateCardState();
+        //UpdateCardState();
 
         // Find and store references to WebXR controllers with correct names
         leftController = GameObject.Find("handL")?.GetComponent<WebXRController>();
@@ -89,6 +101,14 @@ public class CardController : MonoBehaviour
     {
         isOpen = !isOpen;
         UpdateCardState();
+        StartCoroutine(PlayToggleSoundWithDelay());
+    }
+
+    private IEnumerator PlayToggleSoundWithDelay()
+    {
+        yield return new WaitForSeconds(audioDelay);
+        audioSource.pitch = audioPitch;
+        audioSource.PlayOneShot(toggleSound);
     }
 
     void UpdateCardState()
