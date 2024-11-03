@@ -3,17 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Edit Card</title>
+    <title>AR Greeting Card Generator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="TemplateData/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body class="d-flex flex-column">
-    <div class="container-fluid flex-grow-1 d-flex flex-column justify-content-center align-items-center py-4">
-        <h1>Create Your Card</h1>
+    <div class="container-fluid flex-grow-1 d-flex flex-column align-items-center py-4">
         <div class="container">
+            <h1>AR Greeting Card Generator</h1>
+            <h5 class="text-muted mb-4">Create and customize your own Augmented Reality greeting cards for any occasion!</h5>
+            
             <div class="mb-4">
                 <h6 class="fw-bold">Landing Page</h6>
+                <p class="text-muted">Customize the landing page for your greeting card</p>
                 <div class="border p-3 rounded bg-light">
                     <div class="mb-3">
                         <label for="landingPageHeaderInput" class="form-label">Header</label>
@@ -27,7 +31,8 @@
             </div>
 
             <div class="mb-4">
-                <h6 class="fw-bold">XR Card</h6>
+                <h6 class="fw-bold">AR Card</h6>
+                <p class="text-muted">Customize your AR card</p>
                 <div class="border p-3 rounded bg-light">
                     <div class="mb-3">
                         <label for="cardImageInput" class="form-label">Card Image</label>
@@ -53,8 +58,36 @@
             </div>
 
             <div class="footer text-end">
-                <button type="button" class="btn btn-secondary" onclick="copyLink()">Copy Link</button>
-                <button type="button" class="btn btn-primary" onclick="viewCard()">View Card</button>
+                <button class="btn btn-primary" onclick="generateCard()">Generate Card</button>
+            </div>
+
+            <div class="modal fade" id="linkModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Your Custom Card Link</h5>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-muted">Here is the link to your custom greeting card</p>
+
+                            <div class="card bg-light p-3 mb-3 position-relative">
+                                <div class="position-absolute top-0 end-0 p-2">
+                                    <i class="fas fa-copy copy-icon me-2" onclick="copyLink()" title="Copy Link"></i>
+                                    <i class="fas fa-share-alt share-icon" onclick="shareLink()" title="Share Link"></i>
+                                </div>
+                                <div class="text-center">
+                                    <a id="card-anchor" href="#" target="_blank" class="text-break fw-bold"></a>
+                                </div>
+                            </div>
+
+                            <p class="text-muted">You can copy the link or share it directly with your friends and family!</p>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal()">Keep Editing</button>
+                            <button type="button" class="btn btn-primary" onclick="viewCard()">Try it out</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -93,6 +126,17 @@
         // Call openEditForm on page load
         document.addEventListener('DOMContentLoaded', openEditForm);
 
+        function generateCard() {
+            const baseUrl = window.location.origin;
+            const newUrl = generateCardUrl();
+
+            document.getElementById('card-anchor').innerText = `${baseUrl}/${newUrl}`;
+            document.getElementById('card-anchor').href = newUrl;
+            // Show the modal
+            var linkModal = new bootstrap.Modal(document.getElementById('linkModal'));
+            linkModal.show();
+        }
+
         function generateCardUrl() {
             const header = document.getElementById('landingPageHeaderInput').value;
             const message = document.getElementById('landingPageMessageInput').value;
@@ -126,9 +170,30 @@
             });
         }
 
+        function shareLink() {
+            const link = document.getElementById('card-anchor').innerText;
+            const description = "Check out this custom greeting card created just for you!";
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Check out this custom greeting card!',
+                    text: description,
+                    url: link
+                })
+                .then(() => console.log('Successful share'))
+                .catch((error) => console.error('Error sharing:', error));
+            } else {
+                alert('Sharing not supported on this device.');
+            }
+        }
+
         function viewCard() {
             const newUrl = generateCardUrl()
             window.location.href = newUrl; // Navigate back to the main page
+        }
+
+        function closeModal() {
+            var linkModal = bootstrap.Modal.getInstance(document.getElementById('linkModal'));
+            linkModal.hide();
         }
     </script>
 </body>

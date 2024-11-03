@@ -101,3 +101,9 @@ body {
         }
       }
   }
+
+  .copy-icon, .share-icon {
+    cursor: pointer;
+    color: #007bff;
+    margin-left: 5px;
+}
