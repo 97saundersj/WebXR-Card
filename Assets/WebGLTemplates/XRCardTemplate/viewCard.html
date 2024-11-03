@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>AR Greeting Card</title>
+  <meta name="description" content="{{{ DESCRIPTION }}}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="TemplateData/favicon.ico">
+  <link rel="stylesheet" href="TemplateData/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="d-flex flex-column">
+  <!--<button class="btn btn-primary position-fixed" style="top: 20px; right: 20px;" onclick="window.location.href='index.html' + window.location.search">Customise</button>-->
+
+  <div class="container-fluid flex-grow-1 d-flex flex-column justify-content-center align-items-center py-4">
+    <div id="message" class="text-center mb-4">
+      <h1 id="landingPageHeader">Happy Birthday!</h1>
+      <p id="landingPageMessage" class="mb-4">Experience your AR card below.</p>
+    </div>
+
+    <div class="decorative-element"></div>
+    <div class="decorative-element"></div>
+
+    <button id="viewCardButton" class="mt-4">View Card</button>
+
+    <div class="modal fade" id="instructionsModal" tabindex="-1" aria-labelledby="instructionsModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="instructionsModalLabel">How to Use the AR Card</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <ol>
+              <li>Ensure that you're using an Android Phone or XR Device</li>
+              <li>Stand up</li>
+              <li>Move your phone around to scan the floor</li>
+              <li>Tap to place the card</li>
+            </ol>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="gotItButton">Got it!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="unity-container" class="d-none">
+      <div id="unity-canvas-container">
+        <canvas id="unity-canvas"></canvas>
+      </div>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-footer"></div>
+    </div>
+  </div>
+
+  <footer id="footer" class="w-100 text-center py-3">
+    <p class="m-0">Made by Jacques Saunders</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+  <script>
+    var buildUrl = "Build";
+    var loaderUrl = buildUrl + "/{{{ LOADER_FILENAME }}}";
+    var config = {
+      dataUrl: buildUrl + "/{{{ DATA_FILENAME }}}",
+      frameworkUrl: buildUrl + "/{{{ FRAMEWORK_FILENAME }}}",
+      codeUrl: buildUrl + "/{{{ CODE_FILENAME }}}",
+      #if MEMORY_FILENAME
+        memoryUrl: buildUrl + "/{{{ MEMORY_FILENAME }}}",
+      #endif
+      #if SYMBOLS_FILENAME
+        symbolsUrl: buildUrl + "/{{{ SYMBOLS_FILENAME }}}",
+      #endif
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "{{{ COMPANY_NAME }}}",
+      productName: "{{{ PRODUCT_NAME }}}",
+      productVersion: "{{{ PRODUCT_VERSION }}}",
+    };
+
+    var container = document.querySelector("#unity-container");
+    var canvas = document.querySelector("#unity-canvas");
+    var loadingBar = document.querySelector("#unity-loading-bar");
+    var progressBarFull = document.querySelector("#unity-progress-bar-full");
+    var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+    var unityInstance = null;
+    {{{WEBXR_POLYFILL_CONFIG}}}
+
+    #if BACKGROUND_FILENAME
+    canvas.style.background = "url('" + buildUrl + "/{{{ BACKGROUND_FILENAME.replace(/'/g, '%27') }}}') center / cover";
+    #endif
+    loadingBar.style.display = "block";
+
+    var script = document.createElement("script");
+    script.src = loaderUrl;
+    script.onload = () => {
+      createUnityInstance(canvas, config, (progress) => {
+        progressBarFull.style.width = 100 * progress + "%";
+      }).then((instance) => {
+        unityInstance = instance;
+        loadingBar.style.display = "none";
+        sendCardTextToUnity();
+        if (fullscreenButton) {
+          fullscreenButton.onclick = () => {
+            unityInstance.SetFullscreen(1);
+          };
+        }
+      }).catch((message) => {
+        alert(message);
+      });
+    };
+    document.body.appendChild(script);
+
+    let viewCardButton = document.getElementById('viewCardButton');
+    let gotItButton = document.getElementById('gotItButton');
+    let instructionsModal = new bootstrap.Modal(document.getElementById('instructionsModal'));
+
+    document.addEventListener('onARSupportedCheck', function (event) {
+      viewCardButton.disabled = !event.detail.supported;
+    }, false);
+
+    viewCardButton.addEventListener('click', function (event) {
+      instructionsModal.show();
+    }, false);
+
+    gotItButton.addEventListener('click', function (event) {
+      instructionsModal.hide();
+      unityInstance.Module.WebXR.toggleAR();
+    }, false);
+
+    function getUrlParameter(name) {
+      name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+      var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+      var results = regex.exec(location.search);
+      return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+
+    // Send card text to Unity once it's loaded
+    function sendCardTextToUnity() {
+      const cardImage = getUrlParameter('cardImage') || 'birthday';
+      const cardTop = getUrlParameter('cardTop') || '';
+      const cardMiddle = getUrlParameter('cardMiddle') || '';
+      const cardBottom = getUrlParameter('cardBottom') || '';
+
+      if (unityInstance && (cardTop || cardMiddle || cardBottom)) {
+        unityInstance.SendMessage('Card', 'UpdateCardText',
+          JSON.stringify({ cardImage, cardTop, cardMiddle, cardBottom })
+        );
+      }
+    }
+
+    // Update page content on load if URL parameters exist
+    document.addEventListener('DOMContentLoaded', function () {
+      const header = getUrlParameter('header');
+      const message = getUrlParameter('message');
+
+      if (header) {
+        document.getElementById('landingPageHeader').textContent = header;
+      }
+      if (message) {
+        document.getElementById('landingPageMessage').textContent = message;
+      }
+    });
+  </script>
+</body>
+
+</html>

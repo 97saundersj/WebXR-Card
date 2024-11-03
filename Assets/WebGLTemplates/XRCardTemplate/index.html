@@ -1,177 +1,200 @@
 <!DOCTYPE html>
 <html lang="en-us">
-
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Web XR Card</title>
-  <meta name="description" content="{{{ DESCRIPTION }}}">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" href="TemplateData/favicon.ico">
-  <link rel="stylesheet" href="TemplateData/style.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>AR Greeting Card Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
-
 <body class="d-flex flex-column">
-  <button class="btn btn-primary position-fixed" style="top: 20px; right: 20px;" onclick="window.location.href='editCard.html' + window.location.search">Customise</button>
+    <div class="container-fluid flex-grow-1 d-flex flex-column align-items-center py-4">
+        <div class="container">
+            <h1>AR Greeting Card Generator</h1>
+            <h5 class="text-muted mb-4">Create and customize your own Augmented Reality greeting cards for any occasion!</h5>
+            
+            <div class="mb-4">
+                <h6 class="fw-bold">Landing Page</h6>
+                <p class="text-muted">Customize the landing page for your greeting card</p>
+                <div class="border p-3 rounded bg-light">
+                    <div class="mb-3">
+                        <label for="landingPageHeaderInput" class="form-label">Header</label>
+                        <input type="text" class="form-control" id="landingPageHeaderInput" placeholder="Enter header text">
+                    </div>
+                    <div class="mb-3">
+                        <label for="landingPageMessageInput" class="form-label">Message</label>
+                        <textarea class="form-control" id="landingPageMessageInput" rows="3" placeholder="Enter message text"></textarea>
+                    </div>
+                </div>
+            </div>
 
-  <div class="container-fluid flex-grow-1 d-flex flex-column justify-content-center align-items-center py-4">
-    <div id="message" class="text-center mb-4">
-      <h1 id="landingPageHeader">Happy Birthday!</h1>
-      <p id="landingPageMessage" class="mb-4">Experience your AR card below.</p>
-    </div>
+            <div class="mb-4">
+                <h6 class="fw-bold">AR Card</h6>
+                <p class="text-muted">Customize your AR card</p>
+                <div class="border p-3 rounded bg-light">
+                    <div class="mb-3">
+                        <label for="cardImageInput" class="form-label">Card Image</label>
+                        <select class="form-select" id="cardImageInput">
+                            <option value="birthday">Birthday</option>
+                            <option value="halloween">Halloween</option>
+                            <option value="christmas">Christmas</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cardTopInput" class="form-label">Top Text</label>
+                        <input type="text" class="form-control" id="cardTopInput" placeholder="Enter top text">
+                    </div>
+                    <div class="mb-3">
+                        <label for="cardMiddleInput" class="form-label">Middle Text</label>
+                        <textarea class="form-control" id="cardMiddleInput" placeholder="Enter middle text"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cardBottomInput" class="form-label">Bottom Text</label>
+                        <textarea class="form-control" id="cardBottomInput" placeholder="Enter bottom text"></textarea>
+                    </div>
+                </div>
+            </div>
 
-    <div class="decorative-element"></div>
-    <div class="decorative-element"></div>
+            <div class="footer text-end">
+                <button class="btn btn-primary" onclick="generateCard()">Generate Card</button>
+            </div>
 
-    <button id="viewCardButton" class="mt-4">View Card</button>
+            <div class="modal fade" id="linkModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Your Custom Card Link</h5>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-muted">Here is the link to your custom greeting card</p>
 
-    <div class="modal fade" id="instructionsModal" tabindex="-1" aria-labelledby="instructionsModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="instructionsModalLabel">How to Use the AR Card</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <ol>
-              <li>Ensure that you're using an Android Phone or XR Device</li>
-              <li>Stand up</li>
-              <li>Move your phone around to scan the floor</li>
-              <li>Tap to place the card</li>
-            </ol>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" id="gotItButton">Got it!</button>
-          </div>
+                            <div class="card bg-light p-3 mb-3 position-relative">
+                                <div class="position-absolute top-0 end-0 p-2">
+                                    <i class="fas fa-copy copy-icon me-2" onclick="copyLink()" title="Copy Link"></i>
+                                    <i class="fas fa-share-alt share-icon" onclick="shareLink()" title="Share Link"></i>
+                                </div>
+                                <div class="text-center p-3">
+                                    <a id="card-anchor" href="#" target="_blank" class="text-break fw-bold"></a>
+                                </div>
+                            </div>
+
+                            <p class="text-muted">You can copy the link or share it directly with your friends and family!</p>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal()">Keep Editing</button>
+                            <button type="button" class="btn btn-primary" onclick="viewCard()">Try it out</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
+    
+    <footer id="footer" class="w-100 text-center py-3">
+        <p class="m-0">Made by Jacques Saunders</p>
+    </footer>
 
-    <div id="unity-container" class="d-none">
-      <div id="unity-canvas-container">
-        <canvas id="unity-canvas"></canvas>
-      </div>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
-        </div>
-      </div>
-      <div id="unity-footer"></div>
-    </div>
-  </div>
-
-  <footer id="footer" class="w-100 text-center py-3">
-    <p class="m-0">Made by Jacques Saunders</p>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-
-  <script>
-    var buildUrl = "Build";
-    var loaderUrl = buildUrl + "/{{{ LOADER_FILENAME }}}";
-    var config = {
-      dataUrl: buildUrl + "/{{{ DATA_FILENAME }}}",
-      frameworkUrl: buildUrl + "/{{{ FRAMEWORK_FILENAME }}}",
-      codeUrl: buildUrl + "/{{{ CODE_FILENAME }}}",
-      #if MEMORY_FILENAME
-        memoryUrl: buildUrl + "/{{{ MEMORY_FILENAME }}}",
-      #endif
-      #if SYMBOLS_FILENAME
-        symbolsUrl: buildUrl + "/{{{ SYMBOLS_FILENAME }}}",
-      #endif
-      streamingAssetsUrl: "StreamingAssets",
-      companyName: "{{{ COMPANY_NAME }}}",
-      productName: "{{{ PRODUCT_NAME }}}",
-      productVersion: "{{{ PRODUCT_VERSION }}}",
-    };
-
-    var container = document.querySelector("#unity-container");
-    var canvas = document.querySelector("#unity-canvas");
-    var loadingBar = document.querySelector("#unity-loading-bar");
-    var progressBarFull = document.querySelector("#unity-progress-bar-full");
-    var fullscreenButton = document.querySelector("#unity-fullscreen-button");
-    var unityInstance = null;
-    {{{WEBXR_POLYFILL_CONFIG}}}
-
-    #if BACKGROUND_FILENAME
-    canvas.style.background = "url('" + buildUrl + "/{{{ BACKGROUND_FILENAME.replace(/'/g, '%27') }}}') center / cover";
-    #endif
-    loadingBar.style.display = "block";
-
-    var script = document.createElement("script");
-    script.src = loaderUrl;
-    script.onload = () => {
-      createUnityInstance(canvas, config, (progress) => {
-        progressBarFull.style.width = 100 * progress + "%";
-      }).then((instance) => {
-        unityInstance = instance;
-        loadingBar.style.display = "none";
-        sendCardTextToUnity();
-        if (fullscreenButton) {
-          fullscreenButton.onclick = () => {
-            unityInstance.SetFullscreen(1);
-          };
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script>
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         }
-      }).catch((message) => {
-        alert(message);
-      });
-    };
-    document.body.appendChild(script);
 
-    let viewCardButton = document.getElementById('viewCardButton');
-    let gotItButton = document.getElementById('gotItButton');
-    let instructionsModal = new bootstrap.Modal(document.getElementById('instructionsModal'));
+        function openEditForm() {
+            const header = getUrlParameter('header') || 'Happy Birthday!';
+            const message = getUrlParameter('message') || 'Experience your AR card below.';
+            const cardImage = getUrlParameter('cardImage') || 'birthday';
+            const cardTop = getUrlParameter('cardTop') || 'Dear John,';
+            const cardMiddle = getUrlParameter('cardMiddle') || 'Have a great birthday!';
+            const cardBottom = getUrlParameter('cardBottom') || 'Love Jane';
+            
+            document.getElementById('landingPageHeaderInput').value = header;
+            document.getElementById('landingPageMessageInput').value = message;
 
-    document.addEventListener('onARSupportedCheck', function (event) {
-      viewCardButton.disabled = !event.detail.supported;
-    }, false);
+            document.getElementById('cardImageInput').value = cardImage;
+            document.getElementById('cardTopInput').value = cardTop;
+            document.getElementById('cardMiddleInput').value = cardMiddle;
+            document.getElementById('cardBottomInput').value = cardBottom;
+        }
 
-    viewCardButton.addEventListener('click', function (event) {
-      instructionsModal.show();
-    }, false);
+        // Call openEditForm on page load
+        document.addEventListener('DOMContentLoaded', openEditForm);
 
-    gotItButton.addEventListener('click', function (event) {
-      instructionsModal.hide();
-      unityInstance.Module.WebXR.toggleAR();
-    }, false);
+        function generateCard() {
+            const newUrl = generateCardUrl();
 
-    function getUrlParameter(name) {
-      name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-      var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-      var results = regex.exec(location.search);
-      return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-    }
+            document.getElementById('card-anchor').innerText = newUrl;
+            document.getElementById('card-anchor').href = newUrl;
+            // Show the modal
+            var linkModal = new bootstrap.Modal(document.getElementById('linkModal'));
+            linkModal.show();
+        }
 
-    // Send card text to Unity once it's loaded
-    function sendCardTextToUnity() {
-      const cardImage = getUrlParameter('cardImage') || 'birthday';
-      const cardTop = getUrlParameter('cardTop') || '';
-      const cardMiddle = getUrlParameter('cardMiddle') || '';
-      const cardBottom = getUrlParameter('cardBottom') || '';
+        function generateCardUrl() {
+            const header = document.getElementById('landingPageHeaderInput').value;
+            const message = document.getElementById('landingPageMessageInput').value;
 
-      if (unityInstance && (cardTop || cardMiddle || cardBottom)) {
-        unityInstance.SendMessage('Card', 'UpdateCardText',
-          JSON.stringify({ cardImage, cardTop, cardMiddle, cardBottom })
-        );
-      }
-    }
+            const cardTop = document.getElementById('cardTopInput').value;
+            const cardMiddle = document.getElementById('cardMiddleInput').value;
+            const cardBottom = document.getElementById('cardBottomInput').value;
+            const cardImage = document.getElementById('cardImageInput').value;
 
-    // Update page content on load if URL parameters exist
-    document.addEventListener('DOMContentLoaded', function () {
-      const header = getUrlParameter('header');
-      const message = getUrlParameter('message');
+            // Update URL with new parameters
+            const baseUrl = window.location.origin;
+            const newUrl = `${baseUrl}/viewCard.html?header=${encodeURIComponent(header)}&message=${encodeURIComponent(message)}&cardTop=${encodeURIComponent(cardTop)}&cardMiddle=${encodeURIComponent(cardMiddle)}&cardBottom=${encodeURIComponent(cardBottom)}&cardImage=${encodeURIComponent(cardImage)}`;
+            return newUrl;
+            // Copy link to clipboard
+            navigator.clipboard.writeText(newUrl).then(() => {
+                alert('Shareable link copied to clipboard!');
+                window.location.href = newUrl; // Navigate back to the main page
+            }).catch(err => {
+                console.error('Failed to copy link: ', err);
+                alert('Failed to copy link to clipboard');
+            });
+        }
 
-      if (header) {
-        document.getElementById('landingPageHeader').textContent = header;
-      }
-      if (message) {
-        document.getElementById('landingPageMessage').textContent = message;
-      }
-    });
-  </script>
+        function copyLink() {
+            const newUrl = generateCardUrl()
+            // Copy link to clipboard
+            navigator.clipboard.writeText(newUrl).then(() => {
+                alert('Shareable link copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy link: ', err);
+                alert('Failed to copy link to clipboard');
+            });
+        }
+
+        function shareLink() {
+            const link = document.getElementById('card-anchor').innerText;
+            const description = "Check out this custom greeting card created just for you!";
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Check out this custom greeting card!',
+                    text: description,
+                    url: link
+                })
+                .then(() => console.log('Successful share'))
+                .catch((error) => console.error('Error sharing:', error));
+            } else {
+                alert('Sharing not supported on this device.');
+            }
+        }
+
+        function viewCard() {
+            const newUrl = generateCardUrl()
+            window.location.href = newUrl; // Navigate back to the main page
+        }
+
+        function closeModal() {
+            var linkModal = bootstrap.Modal.getInstance(document.getElementById('linkModal'));
+            linkModal.hide();
+        }
+    </script>
 </body>
-
 </html>
