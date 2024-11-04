@@ -8,7 +8,7 @@ The AR Greeting Card enables users to view and interact with a 3D card in their 
 
 ## Demo
 
-Explore the AR Greeting Card in action: [AR Greeting Card Demo](https://97saundersj.github.io/WebXR-Card-Website/). The demo allows users to choose from customizable cards for birthdays, Halloween, and Christmas.
+Explore the AR Greeting Card in action: [AR Greeting Card Demo](https://97saundersj.github.io/cARds). The demo allows users to choose from customizable cards for birthdays, Halloween, and Christmas.
 
 ## Sharing Your AR Greeting Card
 
