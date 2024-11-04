@@ -186,7 +186,7 @@
             const cardImage = document.getElementById('cardImageInput').value;
 
             // Update URL with new parameters
-            const baseUrl = window.location.origin;
+            const baseUrl = `${window.location.origin}${window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'))}`; // Dynamically get the project path
             const newUrl = `${baseUrl}/viewCard.html?header=${encodeURIComponent(header)}&message=${encodeURIComponent(message)}&cardTop=${encodeURIComponent(cardTop)}&cardMiddle=${encodeURIComponent(cardMiddle)}&cardBottom=${encodeURIComponent(cardBottom)}&cardImage=${encodeURIComponent(cardImage)}`;
             return newUrl;
             // Copy link to clipboard
