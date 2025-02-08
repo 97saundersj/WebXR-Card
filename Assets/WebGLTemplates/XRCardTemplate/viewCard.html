@@ -125,9 +125,9 @@
     let gotItButton = document.getElementById('gotItButton');
     let instructionsModal = new bootstrap.Modal(document.getElementById('instructionsModal'));
 
-    document.addEventListener('onARSupportedCheck', function (event) {
-      viewCardButton.disabled = !event.detail.supported;
-    }, false);
+    // document.addEventListener('onARSupportedCheck', function (event) {
+    //   viewCardButton.disabled = !event.detail.supported;
+    // }, false);
 
     viewCardButton.addEventListener('click', function (event) {
       instructionsModal.show();
