@@ -6974,6 +6974,7 @@ MonoBehaviour:
   cardImageRenderer: {fileID: 636304365}
   cardSprites:
   - {fileID: 21300000, guid: 549b9dd2ffa3ea34e8f00a6ec27f1afc, type: 3}
+  - {fileID: 21300000, guid: 75f9fa6487b09844bbd9f266fc124b9a, type: 3}
   - {fileID: 21300000, guid: f12c3190df944ca41925f96ae3116b8e, type: 3}
   - {fileID: 21300000, guid: 838c3bd84e12dcf418b115dacf1d3372, type: 3}
   - {fileID: 21300000, guid: f16c23ef6e7c3fd4397604e7d94136ab, type: 3}
