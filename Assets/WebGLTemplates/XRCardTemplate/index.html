@@ -98,14 +98,11 @@
                     </div>
 
                     <div class="mb-3" id="customImageUrlInput" style="display: none;">
-                        <label for="customImageUrl" class="form-label">URL</label>
-                        <input type="text" class="form-control" id="customImageUrl" placeholder="Enter image URL">
-                        
-                        <label class="form-label">Or</label>
+                        <label style="display: none;" for="customImageUrl" class="form-label">URL</label>
+                        <input style="display: none;" type="text" class="form-control" id="customImageUrl" placeholder="Enter image URL">
 
-                        <label for="customImageFile" class="form-label">File</label>
-                        <input type="file" class="form-control" id="customImageFile" accept="image/*">
-                        <button class="btn btn-secondary mt-2" onclick="uploadImage()">Upload Image</button>
+                        <label for="customImageFile" class="form-label">Image</label>
+                        <input type="file" class="form-control" id="customImageFile" accept="image/*" onchange="uploadImage()">
                     </div>
 
                     <div class="mb-3">
@@ -192,7 +189,6 @@
                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
                        console.log('File available at', downloadURL);
                        document.getElementById('customImageUrl').value = downloadURL;
-                       alert('Image uploaded successfully!');
                    });
                }
            );
