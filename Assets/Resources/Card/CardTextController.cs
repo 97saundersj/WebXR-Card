@@ -79,7 +79,7 @@ public class CardTextController : MonoBehaviour
 
     private IEnumerator LoadImageFromUrl(string url)
     {
-        string proxyUrl = $"https://cors-anywhere.herokuapp.com/{url}";
+        string proxyUrl = url;//$"https://cors-anywhere.herokuapp.com/{url}";
         Debug.Log($"Requesting image from: {proxyUrl}");
 
         using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(proxyUrl))
