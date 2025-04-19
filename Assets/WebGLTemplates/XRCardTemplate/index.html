@@ -102,7 +102,10 @@
                         <input style="display: none;" type="text" class="form-control" id="customImageUrl" placeholder="Enter image URL">
 
                         <label for="customImageFile" class="form-label">Image</label>
-                        <input type="file" class="form-control" id="customImageFile" accept="image/*" onchange="uploadImage()">
+                        <div style="display: flex; align-items: center;">
+                            <input type="file" class="form-control" id="customImageFile" accept="image/*" onchange="uploadImage()">
+                            <i id="loadingIcon" class="fas fa-spinner fa-spin" style="display: none; margin-left: 10px;"></i>
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -165,10 +168,15 @@
         function uploadImage() {
            const fileInput = document.getElementById('customImageFile');
            const file = fileInput.files[0];
+           const generateCardButton = document.querySelector('.btn-primary');
+           const loadingIcon = document.getElementById('loadingIcon');
            if (!file) {
                alert('Please select an image file to upload.');
                return;
            }
+
+           generateCardButton.disabled = true; // Disable the button
+           loadingIcon.style.display = 'inline-block'; // Show loading icon
 
            const storageRef = storage.ref('images/' + file.name);
            const uploadTask = storageRef.put(file);
@@ -183,12 +191,16 @@
                    // Handle unsuccessful uploads
                    console.error('Upload failed:', error);
                    alert('Failed to upload image.');
+                   generateCardButton.disabled = false; // Re-enable the button on failure
+                   loadingIcon.style.display = 'none'; // Hide loading icon
                }, 
                () => {
                    // Handle successful uploads on complete
                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
                        console.log('File available at', downloadURL);
                        document.getElementById('customImageUrl').value = downloadURL;
+                       generateCardButton.disabled = false; // Re-enable the button on success
+                       loadingIcon.style.display = 'none'; // Hide loading icon
                    });
                }
            );
